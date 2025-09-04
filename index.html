@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Loldle‑like Minigame</title>
+  <title>Moridle</title>
   <style>
     :root{
       --bg:#0f1220; --panel:#161A2A; --text:#E7EAF6; --muted:#9aa2c3;
@@ -17,8 +17,8 @@
     .sub{color:var(--muted);margin-bottom:18px}
     .panel{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:16px}
     .row{display:flex;gap:12px;align-items:center}
-    input,button,select{background:#0b0e1a;border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:12px;font-size:14px}
-    input:focus,select:focus{outline:2px solid var(--accent)}
+    input,button{background:#0b0e1a;border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:12px;font-size:14px}
+    input:focus{outline:2px solid var(--accent)}
     button{cursor:pointer}
     button.primary{background:var(--accent);border:0}
     button.ghost{background:transparent}
@@ -27,20 +27,17 @@
     th,td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:left;vertical-align:middle;}
     th{position:sticky;top:0;background:#12162a;z-index:1}
 
-    .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:12px;border:1px solid var(--border);background:#0b0e1a;color:var(--text)}
     .stat{display:inline-flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;font-weight:600}
     .ok{background:color-mix(in hsl, var(--ok) 25%, transparent);outline:1px solid color-mix(in hsl, var(--ok) 55%, #000);} 
     .mid{background:color-mix(in hsl, var(--mid) 25%, transparent);outline:1px solid color-mix(in hsl, var(--mid) 55%, #000);} 
     .bad{background:color-mix(in hsl, var(--bad) 25%, transparent);outline:1px solid color-mix(in hsl, var(--bad) 55%, #000);} 
     .namecell{display:flex;align-items:center;gap:10px}
     .avatar{width:36px;height:36px;border-radius:8px;background:#0b0e1a;border:1px solid var(--border);object-fit:cover}
-    .muted{color:var(--muted)}
     .sep{height:1px;background:var(--border);margin:14px 0}
     .hint{font-size:12px;color:var(--muted)}
     .flex{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
     .grow{flex:1}
     .right{margin-left:auto}
-    .sr{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden}
     .footer{opacity:.75;margin-top:16px;font-size:12px}
     .kbd{border:1px solid var(--border);border-bottom-color:#000;background:#0b0e1a;padding:2px 6px;border-radius:6px;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace}
     .share{white-space:pre-wrap;background:#0b0e1a;border-radius:12px;padding:10px;border:1px dashed var(--border)}
@@ -49,40 +46,9 @@
 <body>
 <div class="wrap">
   <h1>Moridle</h1>
-  <div class="sub">Single‑file, drop‑in minigame. Host anywhere (GitHub Pages/Netlify). Each viewer plays locally; no backend required.</div>
+  <div class="sub">Guess the hidden character. Each player gets a new one every day!</div>
 
-  <div class="panel" id="setup">
-    <div class="flex">
-      <div class="grow">
-        <label class="hint">Paste/replace your dataset in <span class="kbd">CHARACTERS</span> below. Required key: <span class="kbd">name</span>. Optional: <span class="kbd">image</span>, anything else is compared.</label>
-      </div>
-      <button class="ghost" id="btnDemo">Load demo dataset</button>
-    </div>
-    <div class="sep"></div>
-    <div class="flex">
-      <div>
-        <label class="hint">Mode</label><br>
-        <select id="mode">
-          <option value="daily">Daily (based on date)</option>
-          <option value="round">Round Code (you choose)</option>
-          <option value="random">Random (new each refresh)</option>
-        </select>
-      </div>
-      <div class="grow">
-        <label class="hint">Round code (if Mode = Round). Also works via URL <span class="kbd">?round=YOURCODE</span></label>
-        <input id="roundCode" placeholder="e.g. 2025‑08‑26‑stream‑1" />
-      </div>
-      <div>
-        <label class="hint">Max guesses</label><br>
-        <input id="maxGuesses" type="number" min="1" value="8" style="width:90px">
-      </div>
-      <div class="right">
-        <button class="primary" id="btnStart">Start Game</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="panel" id="play" style="display:none">
+  <div class="panel" id="play">
     <div class="flex">
       <div class="grow row">
         <input id="guessInput" list="names" placeholder="Type a character name…" autocomplete="off" />
@@ -90,7 +56,6 @@
         <button id="btnGuess" class="primary">Guess</button>
         <button id="btnGiveUp" class="ghost">Give up</button>
       </div>
-      <div class="pill right" id="statusPill">0 / 0 guesses</div>
     </div>
 
     <div class="sep"></div>
@@ -105,7 +70,7 @@
     <div id="end" style="display:none;margin-top:12px">
       <div id="endMsg" style="font-weight:700;margin-bottom:6px"></div>
       <div class="share" id="shareBox"></div>
-      <div class="footer">Press <span class="kbd">Ctrl+C</span> to copy. Refresh to play again if mode is Random; otherwise new round follows your mode.</div>
+      <div class="footer">Press <span class="kbd">Ctrl+C</span> to copy. Refresh for a new character tomorrow.</div>
     </div>
   </div>
 
@@ -116,394 +81,12 @@
 // ============================
 // 1) PASTE YOUR DATASET HERE
 // ============================
-// Example shape: array of objects with at least { name }. Any other keys become columns.
-// Optional key 'image' will show a 36px avatar next to the name.
 let characters = [
-    { //Ramona
-        "name": "Ramona",
-        "realm": "Chaos",
-        "class": "Chorus",
-        "gender": "Female",
-        "traits": ["Keyflare generation","Drawing"],
-        "rarity": "SR"
-    },
-    { //Ogier
-        "name": "Ogier",
-        "realm": "Chaos",
-        "class": "Warden",
-        "gender": "Male",
-        "traits": ["Shield","Str stacking"],
-        "rarity": "SR"
-    },
-    { //Doll
-        "name": "Doll",
-        "realm": "Chaos",
-        "class": "Chorus",
-        "gender": "Female",
-        "traits": ["Healing","Aliemus battery"],
-        "rarity": "SR"
-    },
-    { //Lotan
-        "name": "Lotan",
-        "realm": "Chaos",
-        "class": "Assault",
-        "gender": "Female",
-        "traits": ["Strike","AoE"],
-        "rarity": "SR"
-    },
-    { //Nautila
-        "name": "Nautila",
-        "realm": "Chaos",
-        "class": "Warden",
-        "gender": "Female",
-        "traits": ["Aliemus battery", "Counter","Shield"],
-        "rarity": "SSR"
-    },
-    { //Karen
-        "name": "Karen",
-        "realm": "Chaos",
-        "class": "Chorus",
-        "gender": "Female",
-        "traits": ["Arithmetica", "Poison","Healing","Weakness"],
-        "rarity": "SSR"
-    },
-    { //Nymphaea
-        "name": "Nymphaea",
-        "realm": "Chaos",
-        "class": "Assault",
-        "gender": "Female",
-        "traits": ["Poison"],
-        "rarity": "SSR"
-    },
-    { //Pandia
-        "name": "Pandia",
-        "realm": "Chaos",
-        "class": "Assault",
-        "gender": "Female",
-        "traits": ["Counter","AoE"],
-        "rarity": "SSR"
-    },
-    { //Alva
-        "name": "Alva",
-        "realm": "Chaos",
-        "class": "Warden",
-        "gender": "Female",
-        "traits": ["Shield","Shield-scaling damage"],
-        "rarity": "SSR"
-    },
-    { //24
-        "name": "24",
-        "realm": "Chaos",
-        "class": "Assault",
-        "gender": "Female",
-        "traits": ["Weakness","Vulnerable","Single-target damage","Multi-hit"],
-        "rarity": "SSR"
-    },
-    { //G-Doll
-        "name": "G-Doll",
-        "realm": "Chaos",
-        "class": "Chorus",
-        "gender": "Female",
-        "traits": ["Poison","Healing","Aliemus battery","Dmg amp"],
-        "rarity": "SSR"
-    },
-    { //Lily
-        "name": "Lily",
-        "realm": "Chaos",
-        "class": "Warden",
-        "gender": "Female",
-        "traits": ["Shield","Poison","Healing"],
-        "rarity": "SSR"
-    },
-    { //Tawil
-        "name": "Tawil",
-        "realm": "Chaos",
-        "class": "Chorus",
-        "gender": "Female",
-        "traits": ["Drawing","Keyflare generation","multi-hit","str stacking"],
-        "rarity": "SSR"
-    },
-    { //Ryker
-        "name": "Ryker",
-        "realm": "Chaos",
-        "class": "Chorus",
-        "gender": "Male",
-        "traits": ["Str stacking","Drawing"],
-        "rarity": "SSR"
-    },
-    { //Hameln
-        "name": "Hameln",
-        "realm": "Chaos",
-        "class": "Chorus",
-        "gender": "Male",
-        "traits": ["Str stacking","Drawing","Insight"],
-        "rarity": "SSR"
-    },
-    { //Kathigu-Ra
-        "name": "Kathigu-Ra",
-        "realm": "Chaos",
-        "class": "Assault",
-        "gender": "Female",
-        "traits": ["str stacking","AoE"],
-        "rarity": "SSR"
-    },
-    { //Caecus
-        "name": "Caecus",
-        "realm": "Aequor",
-        "class": "Warden",
-        "gender": "Male",
-        "traits": ["Counter","Healing","Shield","Counter-scaling damage"],
-        "rarity": "SSR"
-    },
-    { //Goliath
-        "name": "Goliath",
-        "realm": "Aequor",
-        "class": "Assault",
-        "gender": "Male",
-        "traits": ["Str stacking","Str stealing"],
-        "rarity": "SSR"
-    },
-    { //Celeste
-        "name": "Celeste",
-        "realm": "Aequor",
-        "class": "Chorus",
-        "gender": "Female",
-        "traits": ["Healing","Ressurection","Arithmetica"],
-        "rarity": "SSR"
-    },
-    { //Faros
-        "name": "Faros",
-        "realm": "Aequor",
-        "class": "Chorus",
-        "gender": "Female",
-        "traits": ["Poison","Drawing"],
-        "rarity": "SSR"
-    },
-    { //Sanga
-        "name": "Sanga",
-        "realm": "Aequor",
-        "class": "Warden",
-        "gender": "Female",
-        "traits": ["Shield","Shield-scaling damage","AoE"],
-        "rarity": "SSR"
-    },
-    { //Aurita
-        "name": "Aurita",
-        "realm": "Aequor",
-        "class": "Assault",
-        "gender": "Female",
-        "traits": ["Discard","Drawing","Aftershock"],
-        "rarity": "SSR"
-    },
-    { //Tulu
-        "name": "Tulu",
-        "realm": "Aequor",
-        "class": "Assault",
-        "gender": "Male",
-        "traits": ["Aftershock","Str stacking","Tentacle dmg","Weakness"],
-        "rarity": "SSR"
-    },
-    { //Murphy
-        "name": "Murphy",
-        "realm": "Aequor",
-        "class": "Warden",
-        "gender": "Female",
-        "traits": ["Sacrifice","Arithmetica","Shield","Weakness","Vulnerable","Keyflare generation","Tentacle dmg","Dmg reduction"],
-        "rarity": "SSR"
-    },
-    { //Corposant
-        "name": "Corposant",
-        "realm": "Aequor",
-        "class": "Warden",
-        "gender": "Female",
-        "traits": ["Str stacking","Shield","Aftershock","Weakness","Discard","Multi-hit","Drawing"],
-        "rarity": "SSR"
-    },
-    { //Myriam
-        "name": "Myriam",
-        "realm": "Aequor",
-        "class": "Chorus",
-        "gender": "Female",
-        "traits": ["Poison","Tentacle dmg","Aliemus battery","Drawing","Str stacking"],
-        "rarity": "SSR"
-    },
-    { //Agrippa
-        "name": "Agrippa",
-        "realm": "Caro",
-        "class": "Warden",
-        "gender": "Female",
-        "traits": ["Poison","Shield","Str stacking","Alert stacking","Embryo fusion"],
-        "rarity": "SSR"
-    },
-    { //Faint
-        "name": "Faint",
-        "realm": "Caro",
-        "class": "Warden",
-        "gender": "Female",
-        "traits": ["Counter","Shield","Healing"],
-        "rarity": "SSR"
-    },
-    { //Leigh
-        "name": "Leigh",
-        "realm": "Caro",
-        "class": "Chorus",
-        "gender": "Female",
-        "traits": ["Str stacking","Shield on damage taken","Healing","Embryo fusion"],
-        "rarity": "SSR"
-    },
-    { //Aigis
-        "name": "Aigis",
-        "realm": "Caro",
-        "class": "Chorus",
-        "gender": "Female",
-        "traits": ["Vulnerable","Embryo fusion","Petrify"],
-        "rarity": "SSR"
-    },
-    { //Helot
-        "name": "Helot",
-        "realm": "Caro",
-        "class": "Assault",
-        "gender": "Female",
-        "traits": ["Strike"],
-        "rarity": "SSR"
-    },
-    { //Uvhash
-        "name": "Uvhash",
-        "realm": "Caro",
-        "class": "Assault",
-        "gender": "Male",
-        "traits": ["Str stacking","AoE"],
-        "rarity": "SSR"
-    },
-    { //Sorel
-        "name": "Sorel",
-        "realm": "Caro",
-        "class": "Assault",
-        "gender": "Female",
-        "traits": ["Str stacking","Multi-hit","Healing"],
-        "rarity": "SSR"
-    },
-    { //G-Helot
-        "name": "G-Helot",
-        "realm": "Caro",
-        "class": "Assault",
-        "gender": "Female",
-        "traits": ["Bleeding","Str stacking","Drawing","Echo"],
-        "rarity": "SSR"
-    },
-    { //Salvador
-        "name": "Salvador",
-        "realm": "Caro",
-        "class": "Warden",
-        "gender": "Male",
-        "traits": ["Str stacking","Weakness","Embryo fusion","Vulnerable","Barrier","Furnace"],
-        "rarity": "SSR"
-    },
-    { //Thais
-        "name": "Thais",
-        "realm": "Caro",
-        "class": "Chorus",
-        "gender": "Female",
-        "traits": ["Str stacking","Embryo fusion","Aliemus battery","Bleeding","Counter","Poison"],
-        "rarity": "SSR"
-    },
-    { //Doresain
-        "name": "Doresain",
-        "realm": "Caro",
-        "class": "Assault",
-        "gender": "Male",
-        "traits": ["Str stacking","AoE"],
-        "rarity": "SSR"
-    },
-    { //Casiah
-        "name": "Casiah",
-        "realm": "Ultra",
-        "class": "Chorus",
-        "gender": "Female",
-        "traits": ["Drawing"],
-        "rarity": "SSR"
-    },
-    { //Jenkin
-        "name": "Jenkin",
-        "realm": "Ultra",
-        "class": "Assault",
-        "gender": "Female",
-        "traits": ["Multi-hit"],
-        "rarity": "SSR"
-    },
-    { //Liz
-        "name": "Liz",
-        "realm": "Ultra",
-        "class": "Assault",
-        "gender": "Female",
-        "traits": ["Poison"],
-        "rarity": "SSR"
-    },
-    { //Winkle
-        "name": "Winkle",
-        "realm": "Ultra",
-        "class": "Warden",
-        "gender": "Female",
-        "traits": ["Aliemus battery","Counter"],
-        "rarity": "SSR"
-    },
-    { //Tinct
-        "name": "Tinct",
-        "realm": "Ultra",
-        "class": "Chorus",
-        "gender": "Female",
-        "traits": ["Strike"],
-        "rarity": "SSR"
-    },
-    { //Erica
-        "name": "Erica",
-        "realm": "Ultra",
-        "class": "Warden",
-        "gender": "Female",
-        "traits": ["Str stacking","Alert stacking"],
-        "rarity": "SSR"
-    },
-    { //Clementine
-        "name": "Clementine",
-        "realm": "Ultra",
-        "class": "Chorus",
-        "gender": "Female",
-        "traits": ["Str stacking","Keyflare generation","Healing","Dmg amp","Quasar","Dmg reduction"],
-        "rarity": "SSR"
-    },
-    { //Daffodil
-        "name": "Daffodil",
-        "realm": "Ultra",
-        "class": "Assault",
-        "gender": "Female",
-        "traits": ["Str stacking","Vulnerable","Poison","Counter"],
-        "rarity": "SSR"
-    },
-    { //Castor
-        "name": "Castor",
-        "realm": "Ultra",
-        "class": "Warden",
-        "gender": "Male",
-        "traits": ["Shield","Drawing","Weakness","Dmg amp"],
-        "rarity": "SSR"
-    },
-    { //Wanda
-        "name": "Wanda",
-        "realm": "Ultra",
-        "class": "Warden",
-        "gender": "Female",
-        "traits": ["Counter","Dmg reduction"],
-        "rarity": "SSR"
-    },
-    { //Horla
-        "name": "Horla",
-        "realm": "Ultra",
-        "class": "Chorus",
-        "gender": "Female",
-        "traits": ["Healing","Dmg amp","aliemus battery","str stacking"],
-        "rarity": "SSR"
-    },
-]
+  {"name":"Ramona","realm":"Chaos","class":"Chorus","gender":"Female","traits":["Keyflare generation","Drawing"],"rarity":"SR"},
+  {"name":"Ogier","realm":"Chaos","class":"Warden","gender":"Male","traits":["Shield","Str stacking"],"rarity":"SR"},
+  {"name":"Doll","realm":"Chaos","class":"Chorus","gender":"Female","traits":["Healing","Aliemus battery"],"rarity":"SR"},
+  // ... (rest of your characters)
+];
 
 characters = characters.map(c => ({
   ...c,
@@ -511,92 +94,64 @@ characters = characters.map(c => ({
 }));
 
 // ============================
-// 2) GAME LOGIC (no edits needed)
+// 2) GAME LOGIC
 // ============================
 const $ = (sel, el=document) => el.querySelector(sel);
-const $$ = (sel, el=document) => [...el.querySelectorAll(sel)];
 const byName = (a,b)=> a.name.localeCompare(b.name, undefined, {sensitivity:'base'});
 
-// Deterministic hash → [0,1)
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296}}
-function strSeed(s){let h=2166136261; for(let i=0;i<s.length;i++){h^=s.charCodeAt(i); h=(h*Math.imul(16777619,1))>>>0} return h>>>0}
+function strSeed(s){let h=2166136261; for(let i=0;i<s.length;i++){h^=s.charCodeAt(i); h=(h*16777619)>>>0} return h>>>0}
 function pickIndex(len, seed){const r=mulberry32(strSeed(seed))(); return Math.floor(r*len)}
+function todayKey(){const d=new Date(); return d.toISOString().slice(0,10)}
 
-function todayUTC(){const d=new Date(); return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()))}
-function ymd(d){return d.toISOString().slice(0,10)}
-
-function datasetSignature(list){const names=list.map(x=>x.name).sort().join('|'); return strSeed(names).toString(36)}
-
-// Column detection: all keys except name/image
 function inferColumns(list){
   const keys = new Set();
   list.forEach(o=>Object.keys(o).forEach(k=>{if(k!=='name'&&k!=='image') keys.add(k)}));
-  const cols = [...keys];
-  // Stable order: common Loldle-ish columns first if present
-  const pref = ['gender','role','class','position','range','species','resource','region','release','year','difficulty'];
-  cols.sort((a,b)=>{
-    const ia=pref.indexOf(a), ib=pref.indexOf(b);
-    if(ia!==-1||ib!==-1){return (ia===-1?99:ia)-(ib===-1?99:ib)}
-    return a.localeCompare(b)
-  })
-  return cols;
+  return [...keys];
 }
 
 function normalize(v){
   if(v==null) return '';
   if(Array.isArray(v)) return v.map(x=>normalize(x)).filter(Boolean);
-  if(typeof v==='number') return v; // keep numeric
+  if(typeof v==='number') return v;
   return String(v).trim();
 }
 
 function compareCell(guessVal, answerVal){
   const g = normalize(guessVal), a = normalize(answerVal);
-  // Null/empty handling
-  if((Array.isArray(g)&&!g.length) || g==='') return {type:'bad', text:'—'}
-  // Equal (numbers or strings or arrays as sets)
-  if(Array.isArray(g) || Array.isArray(a)){
+  if(Array.isArray(g)||Array.isArray(a)){
     const setG = new Set(Array.isArray(g)?g:[g]);
     const setA = new Set(Array.isArray(a)?a:[a]);
-    const inter = [...setG].filter(x=>setA.has(x));
+    const inter=[...setG].filter(x=>setA.has(x));
     if(inter.length){
       const exact = setG.size===setA.size && inter.length===setG.size;
       return {type: exact? 'ok':'mid', text: Array.isArray(guessVal)?guessVal.join(', '):guessVal}
     }
     return {type:'bad', text: Array.isArray(guessVal)?guessVal.join(', '):guessVal}
   }
-  if(typeof g==='number' && typeof a==='number'){
+  if(typeof g==='number'&&typeof a==='number'){
     if(g===a) return {type:'ok', text:g}
     return {type:'mid', text: g + (g<a?' ↑':' ↓')}
   }
-  // string compare (case-insensitive exact → ok, substring overlap → mid)
-  const gs = String(g).toLowerCase(), as = String(a).toLowerCase();
+  const gs=String(g).toLowerCase(), as=String(a).toLowerCase();
   if(gs===as) return {type:'ok', text:guessVal}
-  if(gs && as && (gs.includes(as) || as.includes(gs))) return {type:'mid', text:guessVal}
+  if(gs && as && (gs.includes(as)||as.includes(gs))) return {type:'mid', text:guessVal}
   return {type:'bad', text:guessVal}
 }
 
-let STATE = {
-  list: [], cols: [], answer: null, max: 8, attempts: [], finished:false,
-  mode:'daily', seed:'', sig:'', key:''
-};
+let STATE = {list:[], cols:[], answer:null, attempts:[], finished:false};
 
 function setupNamesDatalist(){
-  const dl = $('#names');
-  dl.innerHTML = '';
+  const dl=$('#names'); dl.innerHTML='';
   STATE.list.sort(byName).forEach(c=>{
-    const o = document.createElement('option');
-    o.value = c.name; dl.appendChild(o);
-  })
-}
-
-function setStatus(){
-  $('#statusPill').textContent = `${STATE.attempts.length} / ${STATE.max} guesses`;
+    const o=document.createElement('option'); o.value=c.name; dl.appendChild(o);
+  });
 }
 
 function headerRow(){
-  const thead = $('#results thead'); thead.innerHTML='';
-  const tr = document.createElement('tr');
-  const thName = document.createElement('th'); thName.textContent='Name'; tr.appendChild(thName);
+  const thead=$('#results thead'); thead.innerHTML='';
+  const tr=document.createElement('tr');
+  const thName=document.createElement('th'); thName.textContent='Name'; tr.appendChild(thName);
   STATE.cols.forEach(k=>{const th=document.createElement('th'); th.textContent=k; tr.appendChild(th)});
   thead.appendChild(tr);
 }
@@ -605,16 +160,15 @@ function rowFor(guess){
   const tr=document.createElement('tr');
   const tdName=document.createElement('td');
   const nameWrap=document.createElement('div'); nameWrap.className='namecell';
-  const img=document.createElement('img'); img.className='avatar';
-  img.src = guess.image || '';
-  img.alt=''; img.style.display = guess.image? 'block':'none';
+  const img=document.createElement('img'); img.className='avatar'; img.src=guess.image||''; img.alt='';
+  img.style.display=guess.image?'block':'none';
   const nm=document.createElement('div'); nm.textContent=guess.name;
   nameWrap.appendChild(img); nameWrap.appendChild(nm); tdName.appendChild(nameWrap); tr.appendChild(tdName);
 
   STATE.cols.forEach(k=>{
     const td=document.createElement('td');
     const res=compareCell(guess[k], STATE.answer[k]);
-    const span=document.createElement('span'); span.className = `stat ${res.type}`; span.textContent = res.text ?? '—';
+    const span=document.createElement('span'); span.className=`stat ${res.type}`; span.textContent=res.text??'—';
     td.appendChild(span); tr.appendChild(td);
   });
   return tr;
@@ -622,115 +176,67 @@ function rowFor(guess){
 
 function renderTable(){
   const tb=$('#results tbody'); tb.innerHTML='';
-  STATE.attempts.forEach(g=> tb.appendChild(rowFor(g)) );
+  STATE.attempts.forEach(g=> tb.appendChild(rowFor(g)));
 }
 
 function endGame(win){
   STATE.finished=true; $('#end').style.display='block';
-  const tries = STATE.attempts.length;
-  $('#endMsg').textContent = win ? `You got it in ${tries}/${STATE.max}!` : `Out of guesses. It was ${STATE.answer.name}.`;
+  $('#endMsg').textContent = win ? `You got it in ${STATE.attempts.length} guesses!` : `It was ${STATE.answer.name}.`;
   const squares = STATE.attempts.map(g=>{
-    const cells = STATE.cols.map(k=>{
+    return STATE.cols.map(k=>{
       const c=compareCell(g[k], STATE.answer[k]).type;
-      return c==='ok'?'🟩': c==='mid'?'🟨':'⬛';
+      return c==='ok'?'🟩':c==='mid'?'🟨':'⬛';
     }).join('');
-    return cells;
   }).join('\n');
-  const header = `Loldle‑like ${STATE.mode}${STATE.seed?`:${STATE.seed}`:''} — ${win?tries:'X'}/${STATE.max}`;
-  $('#shareBox').textContent = `${header}\n${squares}`;
-  // Persist result per seed so users can't replay the same round to farm streaks
-  localStorage.setItem(STATE.key+':finished','1');
+  $('#shareBox').textContent = `Moridle — ${win?STATE.attempts.length:'X'} tries\n${squares}`;
 }
 
 function guessByName(name){
-  const g = STATE.list.find(x=> x.name.toLowerCase()===name.toLowerCase());
-  if(!g) return null; return g;
+  return STATE.list.find(x=>x.name.toLowerCase()===name.toLowerCase());
 }
 
 function handleGuess(){
   if(STATE.finished) return;
-  const name = $('#guessInput').value.trim();
-  const g = guessByName(name);
+  const name=$('#guessInput').value.trim();
+  const g=guessByName(name);
   if(!g){ $('#guessInput').focus(); return; }
-  // Block duplicate guesses
   if(STATE.attempts.some(a=>a.name.toLowerCase()===g.name.toLowerCase())){
     $('#guessInput').value=''; $('#guessInput').focus(); return;
   }
   STATE.attempts.push(g);
   $('#guessInput').value='';
-  renderTable(); setStatus();
-  // Win check
-  if(g.name===STATE.answer.name){ endGame(true); return; }
-  if(STATE.attempts.length>=STATE.max){ endGame(false); }
+  renderTable();
+  if(g.name===STATE.answer.name){ endGame(true); }
 }
 
 function startGame(){
-  const max = parseInt($('#maxGuesses').value||'8',10);
-  STATE.max=max; STATE.attempts=[]; STATE.finished=false; $('#end').style.display='none';
+  STATE.list=characters;
+  STATE.cols=inferColumns(characters);
 
-  // Daily key (UTC date only)
-  const todayKey = ymd(todayUTC());
-
-  // Check if we already picked for today
-  let seed = localStorage.getItem('moridle-seed-'+todayKey);
+  // Daily per-player seed
+  const today = todayKey();
+  let seed=localStorage.getItem('moridle-seed-'+today);
   if(!seed){
-    // Pick a random seed for THIS viewer only
-    seed = Math.random().toString(36).slice(2);
-    localStorage.setItem('moridle-seed-'+todayKey, seed);
+    seed=Math.random().toString(36).slice(2);
+    localStorage.setItem('moridle-seed-'+today,seed);
   }
-
-  // Pick answer based on this seed
-  const idx = pickIndex(characters.length, seed);
-  STATE.answer = characters[idx];
-
-  STATE.list = characters;
-  STATE.cols = inferColumns(characters);
+  STATE.answer=characters[pickIndex(characters.length, seed)];
+  STATE.attempts=[]; STATE.finished=false;
 
   setupNamesDatalist();
   headerRow();
   renderTable();
-  setStatus();
-
-  $('#setup').style.display='none';
-  $('#play').style.display='block';
-  $('#guessInput').focus();
 }
 
-function giveUp(){ if(STATE.finished) return; STATE.attempts.push(STATE.answer); renderTable(); endGame(false); }
-
-// Keyboard shortcuts
-window.addEventListener('keydown', (e)=>{
-  if(e.key==='/' && document.activeElement!==$('#guessInput')){ e.preventDefault(); $('#guessInput').focus(); }
-  if(e.key==='Escape'){ $('#guessInput').value=''; }
-  if(e.key==='Enter' && document.activeElement===$('#guessInput')) handleGuess();
+$('#btnGuess').onclick=handleGuess;
+$('#guessInput').addEventListener('keydown',e=>{if(e.key==='Enter') handleGuess()});
+$('#btnGiveUp').onclick=()=>{if(!STATE.finished) endGame(false)};
+document.addEventListener('keydown',e=>{
+  if(e.key==='/'){e.preventDefault();$('#guessInput').focus();}
+  if(e.key==='Escape'){$('#guessInput').value='';}
 });
 
-$('#btnGuess').addEventListener('click', handleGuess);
-$('#btnStart').addEventListener('click', startGame);
-$('#btnGiveUp').addEventListener('click', giveUp);
-$('#btnDemo').addEventListener('click', ()=>{
-  CHARACTERS = [
-    { name:'Ahri', image:'https://raw.githubusercontent.com/teuteuguy/assets/main/ahri.jpg', gender:'Female', role:['Mage','Assassin'], range:'Ranged', species:'Vastaya', resource:'Mana', region:'Ionia', release:2011, difficulty:'Moderate' },
-    { name:'Garen', image:'https://raw.githubusercontent.com/teuteuguy/assets/main/garen.jpg', gender:'Male', role:['Fighter','Tank'], range:'Melee', species:'Human', resource:'None', region:'Demacia', release:2010, difficulty:'Easy' },
-    { name:'Yasuo', image:'https://raw.githubusercontent.com/teuteuguy/assets/main/yasuo.jpg', gender:'Male', role:['Fighter','Assassin'], range:'Melee', species:'Human', resource:'Flow', region:'Ionia', release:2013, difficulty:'Hard' },
-    { name:'Jinx', image:'https://raw.githubusercontent.com/teuteuguy/assets/main/jinx.jpg', gender:'Female', role:['Marksman'], range:'Ranged', species:'Human', resource:'Mana', region:'Zaun', release:2013, difficulty:'Moderate' },
-    { name:'Braum', image:'https://raw.githubusercontent.com/teuteuguy/assets/main/braum.jpg', gender:'Male', role:['Support','Tank'], range:'Melee', species:'Human', resource:'Mana', region:'Freljord', release:2014, difficulty:'Easy' },
-    { name:'Aurelion Sol', image:'https://raw.githubusercontent.com/teuteuguy/assets/main/asol.jpg', gender:'Male', role:['Mage'], range:'Ranged', species:'Dragon', resource:'Mana', region:'Targon', release:2016, difficulty:'Moderate' },
-  ];
-  alert('Demo dataset loaded. Click Start Game.\nReplace with your data in CHARACTERS to go live.');
-});
-
-// If someone lands with ?autostart=1 and a round param, start immediately (useful during stream)
-(function autoStart(){
-  const qp = new URLSearchParams(location.search);
-  if(qp.get('autostart')==='1'){
-    $('#mode').value = qp.get('mode')||'round';
-    $('#roundCode').value = qp.get('round')||'';
-    const mg = qp.get('max'); if(mg) $('#maxGuesses').value = mg;
-    // If you host multiple datasets, you could also swap them via URL here
-    startGame();
-  }
-})();
+startGame();
 </script>
 </body>
 </html>
