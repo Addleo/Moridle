@@ -82,41 +82,421 @@
 // 1) PASTE YOUR DATASET HERE
 // ============================
 let characters = [
-  {"name":"Ramona","realm":"Chaos","class":"Chorus","gender":"Female","traits":["Keyflare generation","Drawing"],"rarity":"SR"},
-  {"name":"Ogier","realm":"Chaos","class":"Warden","gender":"Male","traits":["Shield","Str stacking"],"rarity":"SR"},
-  {"name":"Doll","realm":"Chaos","class":"Chorus","gender":"Female","traits":["Healing","Aliemus battery"],"rarity":"SR"},
-  // ... (rest of your characters)
+    { //Ramona
+        "name": "Ramona",
+        "realm": "Chaos",
+        "class": "Chorus",
+        "gender": "Female",
+        "traits": ["Keyflare generation","Drawing"],
+        "rarity": "SR"
+    },
+    { //Ogier
+        "name": "Ogier",
+        "realm": "Chaos",
+        "class": "Warden",
+        "gender": "Male",
+        "traits": ["Shield","Str stacking"],
+        "rarity": "SR"
+    },
+    { //Doll
+        "name": "Doll",
+        "realm": "Chaos",
+        "class": "Chorus",
+        "gender": "Female",
+        "traits": ["Healing","Aliemus battery"],
+        "rarity": "SR"
+    },
+    { //Lotan
+        "name": "Lotan",
+        "realm": "Chaos",
+        "class": "Assault",
+        "gender": "Female",
+        "traits": ["Strike","AoE"],
+        "rarity": "SR"
+    },
+    { //Nautila
+        "name": "Nautila",
+        "realm": "Chaos",
+        "class": "Warden",
+        "gender": "Female",
+        "traits": ["Aliemus battery", "Counter","Shield"],
+        "rarity": "SSR"
+    },
+    { //Karen
+        "name": "Karen",
+        "realm": "Chaos",
+        "class": "Chorus",
+        "gender": "Female",
+        "traits": ["Arithmetica", "Poison","Healing","Weakness"],
+        "rarity": "SSR"
+    },
+    { //Nymphaea
+        "name": "Nymphaea",
+        "realm": "Chaos",
+        "class": "Assault",
+        "gender": "Female",
+        "traits": ["Poison"],
+        "rarity": "SSR"
+    },
+    { //Pandia
+        "name": "Pandia",
+        "realm": "Chaos",
+        "class": "Assault",
+        "gender": "Female",
+        "traits": ["Counter","AoE"],
+        "rarity": "SSR"
+    },
+    { //Alva
+        "name": "Alva",
+        "realm": "Chaos",
+        "class": "Warden",
+        "gender": "Female",
+        "traits": ["Shield","Shield-scaling damage"],
+        "rarity": "SSR"
+    },
+    { //24
+        "name": "24",
+        "realm": "Chaos",
+        "class": "Assault",
+        "gender": "Female",
+        "traits": ["Weakness","Vulnerable","Single-target damage","Multi-hit"],
+        "rarity": "SSR"
+    },
+    { //G-Doll
+        "name": "G-Doll",
+        "realm": "Chaos",
+        "class": "Chorus",
+        "gender": "Female",
+        "traits": ["Poison","Healing","Aliemus battery","Dmg amp"],
+        "rarity": "SSR"
+    },
+    { //Lily
+        "name": "Lily",
+        "realm": "Chaos",
+        "class": "Warden",
+        "gender": "Female",
+        "traits": ["Shield","Poison","Healing"],
+        "rarity": "SSR"
+    },
+    { //Tawil
+        "name": "Tawil",
+        "realm": "Chaos",
+        "class": "Chorus",
+        "gender": "Female",
+        "traits": ["Drawing","Keyflare generation","multi-hit","str stacking"],
+        "rarity": "SSR"
+    },
+    { //Ryker
+        "name": "Ryker",
+        "realm": "Chaos",
+        "class": "Chorus",
+        "gender": "Male",
+        "traits": ["Str stacking","Drawing"],
+        "rarity": "SSR"
+    },
+    { //Hameln
+        "name": "Hameln",
+        "realm": "Chaos",
+        "class": "Chorus",
+        "gender": "Male",
+        "traits": ["Str stacking","Drawing","Insight"],
+        "rarity": "SSR"
+    },
+    { //Kathigu-Ra
+        "name": "Kathigu-Ra",
+        "realm": "Chaos",
+        "class": "Assault",
+        "gender": "Female",
+        "traits": ["str stacking","AoE"],
+        "rarity": "SSR"
+    },
+    { //Caecus
+        "name": "Caecus",
+        "realm": "Aequor",
+        "class": "Warden",
+        "gender": "Male",
+        "traits": ["Counter","Healing","Shield","Counter-scaling damage"],
+        "rarity": "SSR"
+    },
+    { //Goliath
+        "name": "Goliath",
+        "realm": "Aequor",
+        "class": "Assault",
+        "gender": "Male",
+        "traits": ["Str stacking","Str stealing"],
+        "rarity": "SSR"
+    },
+    { //Celeste
+        "name": "Celeste",
+        "realm": "Aequor",
+        "class": "Chorus",
+        "gender": "Female",
+        "traits": ["Healing","Ressurection","Arithmetica"],
+        "rarity": "SSR"
+    },
+    { //Faros
+        "name": "Faros",
+        "realm": "Aequor",
+        "class": "Chorus",
+        "gender": "Female",
+        "traits": ["Poison","Drawing"],
+        "rarity": "SSR"
+    },
+    { //Sanga
+        "name": "Sanga",
+        "realm": "Aequor",
+        "class": "Warden",
+        "gender": "Female",
+        "traits": ["Shield","Shield-scaling damage","AoE"],
+        "rarity": "SSR"
+    },
+    { //Aurita
+        "name": "Aurita",
+        "realm": "Aequor",
+        "class": "Assault",
+        "gender": "Female",
+        "traits": ["Discard","Drawing","Aftershock"],
+        "rarity": "SSR"
+    },
+    { //Tulu
+        "name": "Tulu",
+        "realm": "Aequor",
+        "class": "Assault",
+        "gender": "Male",
+        "traits": ["Aftershock","Str stacking","Tentacle dmg","Weakness"],
+        "rarity": "SSR"
+    },
+    { //Murphy
+        "name": "Murphy",
+        "realm": "Aequor",
+        "class": "Warden",
+        "gender": "Female",
+        "traits": ["Sacrifice","Arithmetica","Shield","Weakness","Vulnerable","Keyflare generation","Tentacle dmg","Dmg reduction"],
+        "rarity": "SSR"
+    },
+    { //Corposant
+        "name": "Corposant",
+        "realm": "Aequor",
+        "class": "Warden",
+        "gender": "Female",
+        "traits": ["Str stacking","Shield","Aftershock","Weakness","Discard","Multi-hit","Drawing"],
+        "rarity": "SSR"
+    },
+    { //Myriam
+        "name": "Myriam",
+        "realm": "Aequor",
+        "class": "Chorus",
+        "gender": "Female",
+        "traits": ["Poison","Tentacle dmg","Aliemus battery","Drawing","Str stacking"],
+        "rarity": "SSR"
+    },
+    { //Agrippa
+        "name": "Agrippa",
+        "realm": "Caro",
+        "class": "Warden",
+        "gender": "Female",
+        "traits": ["Poison","Shield","Str stacking","Alert stacking","Embryo fusion"],
+        "rarity": "SSR"
+    },
+    { //Faint
+        "name": "Faint",
+        "realm": "Caro",
+        "class": "Warden",
+        "gender": "Female",
+        "traits": ["Counter","Shield","Healing"],
+        "rarity": "SSR"
+    },
+    { //Leigh
+        "name": "Leigh",
+        "realm": "Caro",
+        "class": "Chorus",
+        "gender": "Female",
+        "traits": ["Str stacking","Shield on damage taken","Healing","Embryo fusion"],
+        "rarity": "SSR"
+    },
+    { //Aigis
+        "name": "Aigis",
+        "realm": "Caro",
+        "class": "Chorus",
+        "gender": "Female",
+        "traits": ["Vulnerable","Embryo fusion","Petrify"],
+        "rarity": "SSR"
+    },
+    { //Helot
+        "name": "Helot",
+        "realm": "Caro",
+        "class": "Assault",
+        "gender": "Female",
+        "traits": ["Strike"],
+        "rarity": "SSR"
+    },
+    { //Uvhash
+        "name": "Uvhash",
+        "realm": "Caro",
+        "class": "Assault",
+        "gender": "Male",
+        "traits": ["Str stacking","AoE"],
+        "rarity": "SSR"
+    },
+    { //Sorel
+        "name": "Sorel",
+        "realm": "Caro",
+        "class": "Assault",
+        "gender": "Female",
+        "traits": ["Str stacking","Multi-hit","Healing"],
+        "rarity": "SSR"
+    },
+    { //G-Helot
+        "name": "G-Helot",
+        "realm": "Caro",
+        "class": "Assault",
+        "gender": "Female",
+        "traits": ["Bleeding","Str stacking","Drawing","Echo"],
+        "rarity": "SSR"
+    },
+    { //Salvador
+        "name": "Salvador",
+        "realm": "Caro",
+        "class": "Warden",
+        "gender": "Male",
+        "traits": ["Str stacking","Weakness","Embryo fusion","Vulnerable","Barrier","Furnace"],
+        "rarity": "SSR"
+    },
+    { //Thais
+        "name": "Thais",
+        "realm": "Caro",
+        "class": "Chorus",
+        "gender": "Female",
+        "traits": ["Str stacking","Embryo fusion","Aliemus battery","Bleeding","Counter","Poison"],
+        "rarity": "SSR"
+    },
+    { //Doresain
+        "name": "Doresain",
+        "realm": "Caro",
+        "class": "Assault",
+        "gender": "Male",
+        "traits": ["Str stacking","AoE"],
+        "rarity": "SSR"
+    },
+    { //Casiah
+        "name": "Casiah",
+        "realm": "Ultra",
+        "class": "Chorus",
+        "gender": "Female",
+        "traits": ["Drawing"],
+        "rarity": "SSR"
+    },
+    { //Jenkin
+        "name": "Jenkin",
+        "realm": "Ultra",
+        "class": "Assault",
+        "gender": "Female",
+        "traits": ["Multi-hit"],
+        "rarity": "SSR"
+    },
+    { //Liz
+        "name": "Liz",
+        "realm": "Ultra",
+        "class": "Assault",
+        "gender": "Female",
+        "traits": ["Poison"],
+        "rarity": "SSR"
+    },
+    { //Winkle
+        "name": "Winkle",
+        "realm": "Ultra",
+        "class": "Warden",
+        "gender": "Female",
+        "traits": ["Aliemus battery","Counter"],
+        "rarity": "SSR"
+    },
+    { //Tinct
+        "name": "Tinct",
+        "realm": "Ultra",
+        "class": "Chorus",
+        "gender": "Female",
+        "traits": ["Strike"],
+        "rarity": "SSR"
+    },
+    { //Erica
+        "name": "Erica",
+        "realm": "Ultra",
+        "class": "Warden",
+        "gender": "Female",
+        "traits": ["Str stacking","Alert stacking"],
+        "rarity": "SSR"
+    },
+    { //Clementine
+        "name": "Clementine",
+        "realm": "Ultra",
+        "class": "Chorus",
+        "gender": "Female",
+        "traits": ["Str stacking","Keyflare generation","Healing","Dmg amp","Quasar","Dmg reduction"],
+        "rarity": "SSR"
+    },
+    { //Daffodil
+        "name": "Daffodil",
+        "realm": "Ultra",
+        "class": "Assault",
+        "gender": "Female",
+        "traits": ["Str stacking","Vulnerable","Poison","Counter"],
+        "rarity": "SSR"
+    },
+    { //Castor
+        "name": "Castor",
+        "realm": "Ultra",
+        "class": "Warden",
+        "gender": "Male",
+        "traits": ["Shield","Drawing","Weakness","Dmg amp"],
+        "rarity": "SSR"
+    },
+    { //Wanda
+        "name": "Wanda",
+        "realm": "Ultra",
+        "class": "Warden",
+        "gender": "Female",
+        "traits": ["Counter","Dmg reduction"],
+        "rarity": "SSR"
+    },
+    { //Horla
+        "name": "Horla",
+        "realm": "Ultra",
+        "class": "Chorus",
+        "gender": "Female",
+        "traits": ["Healing","Dmg amp","aliemus battery","str stacking"],
+        "rarity": "SSR"
+    },
 ];
 
-characters = characters.map(c => ({
-  ...c,
-  image: `./Character_icons/${c.name}.png`
-}));
+// attach local icons
+characters = characters.map(c => ({ ...c, image: `./Character_icons/${c.name}.png` }));
 
 // ============================
-// 2) GAME LOGIC
+// 2) GAME LOGIC + PERSISTENCE
 // ============================
 const $ = (sel, el=document) => el.querySelector(sel);
 const byName = (a,b)=> a.name.localeCompare(b.name, undefined, {sensitivity:'base'});
 
+// --- deterministic helpers
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296}}
 function strSeed(s){let h=2166136261; for(let i=0;i<s.length;i++){h^=s.charCodeAt(i); h=(h*16777619)>>>0} return h>>>0}
 function pickIndex(len, seed){const r=mulberry32(strSeed(seed))(); return Math.floor(r*len)}
-function todayKey(){const d=new Date(); return d.toISOString().slice(0,10)}
+function todayUTC(){const d=new Date(); return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()))}
+function ymd(d){return d.toISOString().slice(0,10)}
+function datasetSignature(list){const names=list.map(x=>x.name).sort().join('|'); return strSeed(names).toString(36)}
 
+// --- table helpers
 function inferColumns(list){
   const keys = new Set();
   list.forEach(o=>Object.keys(o).forEach(k=>{if(k!=='name'&&k!=='image') keys.add(k)}));
   return [...keys];
 }
-
 function normalize(v){
   if(v==null) return '';
   if(Array.isArray(v)) return v.map(x=>normalize(x)).filter(Boolean);
   if(typeof v==='number') return v;
   return String(v).trim();
 }
-
 function compareCell(guessVal, answerVal){
   const g = normalize(guessVal), a = normalize(answerVal);
   if(Array.isArray(g)||Array.isArray(a)){
@@ -139,15 +519,50 @@ function compareCell(guessVal, answerVal){
   return {type:'bad', text:guessVal}
 }
 
-let STATE = {list:[], cols:[], answer:null, attempts:[], finished:false};
+// --- global state
+let STATE = {
+  list: [], cols: [], answer: null, attempts: [], finished: false, win: false,
+  // derived keys
+  day: '', sig: '', seed: '', storageKey: '', seedKeyNew: '', seedKeyLegacy: ''
+};
 
+// --- storage helpers
+function makeKeys(){
+  const day = ymd(todayUTC());
+  const sig = datasetSignature(characters);
+  const seedKeyNew = `moridle:seed:${sig}:${day}`;
+  const seedKeyLegacy = `moridle-seed-${day}`; // read for backward compat
+  const stateKey = `moridle:state:${sig}:${day}`;
+  return { day, sig, seedKeyNew, seedKeyLegacy, stateKey };
+}
+
+function loadSeed(keys){
+  let seed = localStorage.getItem(keys.seedKeyNew) || localStorage.getItem(keys.seedKeyLegacy);
+  if(!seed){
+    seed = Math.random().toString(36).slice(2);
+    localStorage.setItem(keys.seedKeyNew, seed);
+    // also set legacy for continuity (harmless)
+    localStorage.setItem(keys.seedKeyLegacy, seed);
+  }
+  return seed;
+}
+
+function loadPersisted(keys){
+  try { return JSON.parse(localStorage.getItem(keys.stateKey) || 'null'); }
+  catch { return null; }
+}
+
+function savePersisted(keys, data){
+  localStorage.setItem(keys.stateKey, JSON.stringify(data));
+}
+
+// --- UI build
 function setupNamesDatalist(){
   const dl=$('#names'); dl.innerHTML='';
   STATE.list.sort(byName).forEach(c=>{
     const o=document.createElement('option'); o.value=c.name; dl.appendChild(o);
   });
 }
-
 function headerRow(){
   const thead=$('#results thead'); thead.innerHTML='';
   const tr=document.createElement('tr');
@@ -155,7 +570,6 @@ function headerRow(){
   STATE.cols.forEach(k=>{const th=document.createElement('th'); th.textContent=k; tr.appendChild(th)});
   thead.appendChild(tr);
 }
-
 function rowFor(guess){
   const tr=document.createElement('tr');
   const tdName=document.createElement('td');
@@ -173,15 +587,25 @@ function rowFor(guess){
   });
   return tr;
 }
-
 function renderTable(){
   const tb=$('#results tbody'); tb.innerHTML='';
   STATE.attempts.forEach(g=> tb.appendChild(rowFor(g)));
 }
+function setInputsDisabled(flag){
+  $('#guessInput').disabled = flag;
+  $('#btnGuess').disabled = flag;
+}
 
-function endGame(win){
-  STATE.finished=true; $('#end').style.display='block';
-  $('#endMsg').textContent = win ? `You got it in ${STATE.attempts.length} guesses!` : `It was ${STATE.answer.name}.`;
+// --- end screen
+function showEnd(win){
+  STATE.finished = true;
+  STATE.win = !!win;
+  setInputsDisabled(true);
+  $('#end').style.display='block';
+  $('#endMsg').textContent = win
+    ? `You got it in ${STATE.attempts.length} guesses!`
+    : `It was ${STATE.answer.name}.`;
+
   const squares = STATE.attempts.map(g=>{
     return STATE.cols.map(k=>{
       const c=compareCell(g[k], STATE.answer[k]).type;
@@ -191,12 +615,24 @@ function endGame(win){
   $('#shareBox').textContent = `Moridle — ${win?STATE.attempts.length:'X'} tries\n${squares}`;
 }
 
+function persistNow(){
+  const keys = {
+    stateKey: STATE.storageKey
+  };
+  const data = {
+    attempts: STATE.attempts.map(a => a.name),
+    finished: STATE.finished,
+    win: STATE.win
+  };
+  savePersisted(keys, data);
+}
+
+// --- gameplay
 function guessByName(name){
   return STATE.list.find(x=>x.name.toLowerCase()===name.toLowerCase());
 }
-
 function handleGuess(){
-  if(STATE.finished) return;
+  if(STATE.finished) return; // block after solved/given up
   const name=$('#guessInput').value.trim();
   const g=guessByName(name);
   if(!g){ $('#guessInput').focus(); return; }
@@ -206,36 +642,76 @@ function handleGuess(){
   STATE.attempts.push(g);
   $('#guessInput').value='';
   renderTable();
-  if(g.name===STATE.answer.name){ endGame(true); }
+  // persist after each guess
+  persistNow();
+
+  if(g.name===STATE.answer.name){
+    showEnd(true);
+    persistNow(); // save finished state
+  }
 }
 
-function startGame(){
-  STATE.list=characters;
-  STATE.cols=inferColumns(characters);
+function giveUp(){
+  if(STATE.finished) return;
+  // reveal row with the answer like your earlier version
+  STATE.attempts.push(STATE.answer);
+  renderTable();
+  showEnd(false);
+  persistNow();
+}
 
-  // Daily per-player seed
-  const today = todayKey();
-  let seed=localStorage.getItem('moridle-seed-'+today);
-  if(!seed){
-    seed=Math.random().toString(36).slice(2);
-    localStorage.setItem('moridle-seed-'+today,seed);
+// --- init / restore
+function startGame(){
+  STATE.list = characters;
+  STATE.cols = inferColumns(characters);
+
+  const keys = makeKeys();
+  STATE.day = keys.day;
+  STATE.sig = keys.sig;
+  STATE.seed = loadSeed(keys);
+  STATE.storageKey = keys.stateKey;
+
+  STATE.answer = characters[pickIndex(characters.length, STATE.seed)];
+
+  // restore progress if present
+  const saved = loadPersisted(keys);
+  STATE.attempts = [];
+  STATE.finished = false;
+  STATE.win = false;
+
+  if(saved){
+    // map saved names back to objects, filter unknowns safely
+    const nameToObj = new Map(STATE.list.map(o=>[o.name.toLowerCase(), o]));
+    STATE.attempts = (saved.attempts||[])
+      .map(n => nameToObj.get(String(n).toLowerCase()))
+      .filter(Boolean);
+    STATE.finished = !!saved.finished;
+    STATE.win = !!saved.win;
   }
-  STATE.answer=characters[pickIndex(characters.length, seed)];
-  STATE.attempts=[]; STATE.finished=false;
 
   setupNamesDatalist();
   headerRow();
   renderTable();
+
+  if(STATE.finished){
+    // lock UI and show end screen exactly as before
+    showEnd(STATE.win);
+  } else {
+    setInputsDisabled(false);
+    $('#end').style.display='none';
+  }
 }
 
+// --- wire events
 $('#btnGuess').onclick=handleGuess;
 $('#guessInput').addEventListener('keydown',e=>{if(e.key==='Enter') handleGuess()});
-$('#btnGiveUp').onclick=()=>{if(!STATE.finished) endGame(false)};
+$('#btnGiveUp').onclick=giveUp;
 document.addEventListener('keydown',e=>{
   if(e.key==='/'){e.preventDefault();$('#guessInput').focus();}
   if(e.key==='Escape'){$('#guessInput').value='';}
 });
 
+// go!
 startGame();
 </script>
 </body>
