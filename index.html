@@ -559,12 +559,32 @@ function savePersisted(keys, data){
 }
 
 // --- UI build
+// no need to pre-fill the datalist anymore
 function setupNamesDatalist(){
-  const dl=$('#names'); dl.innerHTML='';
-  STATE.list.sort(byName).forEach(c=>{
-    const o=document.createElement('option'); o.value=c.name; dl.appendChild(o);
-  });
+  $('#names').innerHTML = '';
 }
+
+// dynamic filter for the datalist
+$('#guessInput').addEventListener('input', e => {
+  const query = e.target.value.toLowerCase();
+  const dl = $('#names');
+  dl.innerHTML = '';
+
+  if(query.length === 0) return; // don’t show anything until user types
+
+  STATE.list
+    .filter(c => 
+      c.name.toLowerCase().startsWith(query) &&   // case-insensitive starts-with
+      !STATE.attempts.some(a => a.name.toLowerCase() === c.name.toLowerCase())
+    )
+    .sort(byName)
+    .forEach(c => {
+      const o = document.createElement('option');
+      o.value = c.name;
+      dl.appendChild(o);
+    });
+});
+
 function headerRow(){
   const thead=$('#results thead'); thead.innerHTML='';
   const tr=document.createElement('tr');
@@ -788,5 +808,6 @@ startGame();
 </script>
 </body>
 </html>
+
 
 
