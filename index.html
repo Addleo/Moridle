@@ -645,7 +645,7 @@ function showEnd(win){
   const squares = STATE.attempts.map(g=>{
     return STATE.cols.map(k=>{
       const c=compareCell(g[k], STATE.answer[k]).type;
-      return c==='ok'?'🟩':c==='mid'?'🟨':'⬛';
+      return c==='ok'?'🟩':c==='mid'?'🟨':'🟥';
     }).join('');
   }).join('\n');
   $('#shareBox').textContent = `Moridle — ${win?STATE.attempts.length:'X'} tries\n${squares}`;
@@ -752,3 +752,4 @@ startGame();
 </script>
 </body>
 </html>
+
