@@ -28,9 +28,9 @@
     th{position:sticky;top:0;background:#12162a;z-index:1}
 
     .stat{display:inline-flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;font-weight:600}
+    .stat-traits { display: flex; flex-wrap: wrap; gap: 4px; }
     .ok{background:color-mix(in hsl, var(--ok) 25%, transparent);outline:1px solid color-mix(in hsl, var(--ok) 55%, #000);} 
-    .mid{background:color-mix(in hsl, var(--mid) 25%, transparent);outline:1px solid color-mix(in hsl, var(--mid) 55%, #000);} 
-    .bad{background:color-mix(in hsl, var(--bad) 25%, transparent);outline:1px solid color-mix(in hsl, var(--bad) 55%, #000);} 
+    .bad{background:color-mix(in hsl, var(--danger) 25%, transparent);outline:1px solid color-mix(in hsl, var(--danger) 55%, #000);} 
     .namecell{display:flex;align-items:center;gap:10px}
     .avatar{width:36px;height:36px;border-radius:8px;background:#0b0e1a;border:1px solid var(--border);object-fit:cover}
     .sep{height:1px;background:var(--border);margin:14px 0}
@@ -572,19 +572,55 @@ function headerRow(){
 }
 function rowFor(guess){
   const tr=document.createElement('tr');
+
+  // --- name cell
   const tdName=document.createElement('td');
   const nameWrap=document.createElement('div'); nameWrap.className='namecell';
   const img=document.createElement('img'); img.className='avatar'; img.src=guess.image||''; img.alt='';
   img.style.display=guess.image?'block':'none';
   const nm=document.createElement('div'); nm.textContent=guess.name;
-  nameWrap.appendChild(img); nameWrap.appendChild(nm); tdName.appendChild(nameWrap); tr.appendChild(tdName);
+  nameWrap.appendChild(img); nameWrap.appendChild(nm);
+  tdName.appendChild(nameWrap);
+  tr.appendChild(tdName);
 
+  // --- other cols
   STATE.cols.forEach(k=>{
     const td=document.createElement('td');
-    const res=compareCell(guess[k], STATE.answer[k]);
-    const span=document.createElement('span'); span.className=`stat ${res.type}`; span.textContent=res.text??'—';
-    td.appendChild(span); tr.appendChild(td);
+
+    if(k === "traits"){
+      // render each trait separately
+      const wrap=document.createElement('div');
+      wrap.className="stat-traits";
+      const guessTraits = Array.isArray(guess[k]) ? guess[k] : [guess[k]];
+      const answerTraits = new Set(Array.isArray(STATE.answer[k]) ? STATE.answer[k] : [STATE.answer[k]]);
+      guessTraits.forEach(t=>{
+        const span=document.createElement('span');
+        span.className="stat " + (answerTraits.has(t) ? "ok" : "bad");
+        span.textContent=t;
+        wrap.appendChild(span);
+      });
+      td.appendChild(wrap);
+
+    } else if(k === "gender"){
+      // strict only ok/bad
+      const span=document.createElement('span');
+      const correct = String(guess[k]).toLowerCase() === String(STATE.answer[k]).toLowerCase();
+      span.className="stat " + (correct ? "ok" : "bad");
+      span.textContent=guess[k];
+      td.appendChild(span);
+
+    } else {
+      // default behavior for realm, class, rarity
+      const res=compareCell(guess[k], STATE.answer[k]);
+      const span=document.createElement('span');
+      span.className=`stat ${res.type}`;
+      span.textContent=res.text??'—';
+      td.appendChild(span);
+    }
+
+    tr.appendChild(td);
   });
+
   return tr;
 }
 function renderTable(){
