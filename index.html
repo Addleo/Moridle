@@ -704,17 +704,19 @@ function showEnd(win){
     : `It was ${STATE.answer.name}.`;
 
   const squares = STATE.attempts.map(g=>{
-    return STATE.cols.map(k=>{
-      if(k === "rarity"){
-        // rarity is strict match only (green/red)
-        return String(g[k]).toLowerCase() === String(STATE.answer[k]).toLowerCase()
-          ? '🟩'
-          : '🟥';
-      }
-      const c = compareCell(g[k], STATE.answer[k]).type;
-      return c==='ok' ? '🟩' : c==='mid' ? '🟨' : '🟥';
-    }).join('');
-  }).join('\n');
+  return STATE.cols.map(k=>{
+    // Special cases (all-or-nothing)
+    if (k === "gender" || k === "rarity") {
+      return (String(g[k]).toLowerCase() === String(STATE.answer[k]).toLowerCase())
+        ? '🟩'
+        : '🟥';
+    }
+
+    // Default behavior
+    const c = compareCell(g[k], STATE.answer[k]).type;
+    return c === 'ok' ? '🟩' : c === 'mid' ? '🟨' : '🟥';
+  }).join('');
+}).join('\n');
 
   $('#shareBox').textContent = `Moridle — ${win?STATE.attempts.length:'X'} tries\n${squares}`;
 }
@@ -822,4 +824,3 @@ startGame();
 </script>
 </body>
 </html>
-
