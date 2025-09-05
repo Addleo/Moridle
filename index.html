@@ -560,21 +560,21 @@ function savePersisted(keys, data){
 
 // --- UI build
 // no need to pre-fill the datalist anymore
+// make setupNamesDatalist a no-op (we'll populate dynamically)
 function setupNamesDatalist(){
   $('#names').innerHTML = '';
 }
 
-// dynamic filter for the datalist
-$('#guessInput').addEventListener('input', e => {
-  const query = e.target.value.toLowerCase();
+// Populate datalist only when user types (and exclude already guessed names)
+function updateDatalistForQuery(query) {
   const dl = $('#names');
   dl.innerHTML = '';
-
-  if(query.length === 0) return; // don’t show anything until user types
+  const q = String(query || $('#guessInput').value || '').trim().toLowerCase();
+  if (!q) return; // don't show anything for empty input
 
   STATE.list
-    .filter(c => 
-      c.name.toLowerCase().startsWith(query) &&   // case-insensitive starts-with
+    .filter(c =>
+      c.name.toLowerCase().startsWith(q) &&
       !STATE.attempts.some(a => a.name.toLowerCase() === c.name.toLowerCase())
     )
     .sort(byName)
@@ -583,6 +583,18 @@ $('#guessInput').addEventListener('input', e => {
       o.value = c.name;
       dl.appendChild(o);
     });
+}
+
+// update as the user types
+$('#guessInput').addEventListener('input', (e) => updateDatalistForQuery(e.target.value));
+
+// clear datalist when focusing if input is empty (prevents showing old options)
+$('#guessInput').addEventListener('focus', (e) => {
+  if (!e.target.value || !e.target.value.trim()) {
+    $('#names').innerHTML = '';
+  } else {
+    updateDatalistForQuery(e.target.value);
+  }
 });
 
 function headerRow(){
@@ -644,7 +656,7 @@ function rowFor(guess){
 
       // realm icon
       const img = document.createElement('img');
-      img.src = `./Realm_icons/${guess[k]}.png`;
+      img.src = `./realm_icons/${guess[k]}.png`;
       img.alt = guess[k];
 
       wrap.appendChild(span);
@@ -733,6 +745,7 @@ function handleGuess(){
   }
   STATE.attempts.push(g);
   $('#guessInput').value='';
+  $('#names').innerHTML = ''; // <-- clear suggestions immediately
   renderTable();
   // persist after each guess
   persistNow();
@@ -747,6 +760,7 @@ function giveUp(){
   if(STATE.finished) return;
   // reveal row with the answer like your earlier version
   STATE.attempts.push(STATE.answer);
+  $('#names').innerHTML = ''; // <-- clear suggestions
   renderTable();
   showEnd(false);
   persistNow();
@@ -808,6 +822,3 @@ startGame();
 </script>
 </body>
 </html>
-
-
-
